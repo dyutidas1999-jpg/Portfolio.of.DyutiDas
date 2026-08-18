@@ -1,0 +1,22 @@
+// 48px copies of the artwork: browsers ignore cursor images larger than 128px.
+:root {
+  --cursor-arrow: url('./images/cursor_arrow.png') 10 4, auto;
+  --cursor-heart: url('./images/cursor_hand.png') 22 3, pointer;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  cursor: var(--cursor-arrow);
+}
+
+a,
+button,
+[role='button'] {
+  cursor: var(--cursor-heart);
+}

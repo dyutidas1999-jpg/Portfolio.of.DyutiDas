@@ -1,0 +1,342 @@
+.homepage {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    90deg,
+    #ffffff 0,
+    #ffffff 72px,
+    #f8d8e2 72px,
+    #f8d8e2 144px
+  );
+
+  &__menu-btn {
+    position: fixed;
+    z-index: 20;
+    top: 1.25rem;
+    left: 1.25rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background-image: linear-gradient(180deg, #ffa3cf 0%, #f76fb3 100%);
+    box-shadow: 0 0.25rem 0.75rem rgba(226, 96, 158, 0.4);
+    cursor: var(--cursor-heart);
+
+    span {
+      width: 1.35rem;
+      height: 0.2rem;
+      border-radius: 999px;
+      background: #fff;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+
+    &.is-open span:nth-child(1) {
+      transform: translateY(0.55rem) rotate(45deg);
+    }
+
+    &.is-open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    &.is-open span:nth-child(3) {
+      transform: translateY(-0.55rem) rotate(-45deg);
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(120, 40, 80, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 250ms ease, visibility 250ms ease;
+
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__nav {
+    position: fixed;
+    z-index: 15;
+    inset: 0 auto 0 0;
+    width: min(17rem, 80vw);
+    padding: 5.5rem 1.5rem 2rem;
+    background-image: linear-gradient(160deg, #ffe3f1 0%, #ffc4e0 100%);
+    box-shadow: 0.25rem 0 1.5rem rgba(226, 96, 158, 0.35);
+    transform: translateX(-100%);
+    transition: transform 280ms ease;
+    overflow-y: auto;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    a {
+      display: block;
+      padding: 0.6rem 1rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      color: #c23e80;
+      font-family: 'Baloo 2', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 180ms ease, transform 180ms ease;
+
+      &:hover,
+      &:focus-visible {
+        background: #fff;
+        transform: translateX(0.25rem);
+      }
+    }
+  }
+
+  &__nav-title {
+    margin: 0 0 1rem;
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #b52f72;
+  }
+
+  &__title {
+    display: flex;
+    margin: 0 0 0.5rem;
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  &__title-letter {
+    position: relative;
+    // Base layer: pink outline. Kept thin because text-stroke is centred and a
+    // fat one bleeds inward until the letters blob together.
+    color: #ef7fb6;
+    -webkit-text-stroke: 0.05em #e2609e;
+    transform-origin: 50% 90%;
+    animation: homepage-bubble 2.6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 70ms);
+
+    // Body and gloss are painted over the outline (the animated span is a
+    // stacking context, so a negative z-index child would sit above it).
+    &::before,
+    &::after {
+      content: attr(data-letter);
+      position: absolute;
+      inset: 0;
+      -webkit-text-stroke: 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+
+    // background-image, not the background shorthand, which resets background-clip.
+    &::before {
+      background-image: linear-gradient(180deg, #ffdcef 0%, #ffb9dc 45%, #f894c8 100%);
+    }
+
+    &::after {
+      background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.75) 20%,
+        rgba(255, 255, 255, 0) 46%
+      );
+    }
+  }
+
+  &__hero-wrap {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+  }
+
+  &__hero {
+    // Square artwork: sizing by width alone keeps the hotspot % aligned (no
+    // letterboxing). The vh cap leaves room for the title within one screen.
+    width: min(60vw, 75vh);
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  &__hot {
+    position: absolute;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: var(--cursor-heart);
+  }
+
+  // Every hotspot below is traced as % of the square artwork.
+  &__hot--laptop {
+    left: 26%;
+    top: 67%;
+    width: 50%;
+    height: 27%;
+    clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+  }
+
+  &__hot--girl {
+    inset: 0;
+    clip-path: polygon(
+      33% 3%,
+      62% 3%,
+      70% 12%,
+      72% 30%,
+      88% 48%,
+      95% 64%,
+      95% 76%,
+      20% 76%,
+      19% 32%,
+      26% 24%,
+      34% 33%,
+      33% 12%
+    );
+  }
+
+  &__hot--cup {
+    left: 79%;
+    top: 78%;
+    width: 18%;
+    height: 17%;
+    border-radius: 40%;
+  }
+
+  &__hot--toy {
+    left: 3%;
+    top: 74%;
+    width: 10%;
+    height: 15%;
+    border-radius: 45%;
+  }
+
+  &__hot--books {
+    top: 89%;
+    width: 25%;
+    height: 9%;
+  }
+
+  &__hot--pens {
+    left: 13%;
+    top: 66%;
+    width: 10%;
+    height: 19%;
+  }
+
+  &__tip {
+    position: absolute;
+    z-index: 2;
+    padding: 0.45em 1em;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background-image: linear-gradient(180deg, #ffa3cf 0%, #f76fb3 100%);
+    color: #fff;
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: clamp(0.8rem, 1.5vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    box-shadow: 0 0.35em 0.9em rgba(226, 96, 158, 0.4);
+    opacity: 0;
+    transform: translate(-50%, 0.3em) scale(0.9);
+    transition: opacity 180ms ease, transform 180ms ease;
+    pointer-events: none;
+
+    // Little tail pointing down at the hotspot.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      margin-left: -0.45em;
+      border: 0.45em solid transparent;
+      border-top-color: #fff;
+    }
+  }
+
+  &__tip--girl {
+    left: 52%;
+    top: 1%;
+  }
+
+  &__tip--laptop {
+    left: 50%;
+    top: 58%;
+  }
+
+  &__tip--cup {
+    left: 88%;
+    top: 74%;
+  }
+
+  &__tip--toy {
+    left: 9%;
+    top: 70%;
+  }
+
+  &__tip--books {
+    left: 14%;
+    top: 84%;
+  }
+
+  &__tip--pens {
+    left: 19%;
+    top: 60%;
+  }
+
+  &__hot:hover + &__tip,
+  &__hot:focus-visible + &__tip {
+    opacity: 1;
+    transform: translate(-50%, -0.5em) scale(1);
+  }
+}
+
+@keyframes homepage-bubble {
+  0%,
+  70%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  15% {
+    transform: translateY(0) scale(1.14, 0.86);
+  }
+  35% {
+    transform: translateY(-0.09em) scale(0.92, 1.12);
+  }
+  52% {
+    transform: translateY(0) scale(1.05, 0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage__title-letter {
+    animation: none;
+  }
+}
