@@ -1,14 +1,58 @@
 .hobby {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(
-    90deg,
-    #ffffff 0,
-    #ffffff 72px,
-    #f8d8e2 72px,
-    #f8d8e2 144px
-  );
+  &__grid {
+    width: min(48rem, 100%);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  &__card {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+
+    &:hover .hobby__icon {
+      animation: hobby-bounce 700ms ease;
+    }
+  }
+
+  &__icon {
+    display: inline-block;
+    font-size: 2.6rem;
+    line-height: 1;
+    filter: drop-shadow(0 0.25rem 0.4rem var(--hp-glow));
+  }
+
+  &__name {
+    margin: 0.6rem 0 0.35rem;
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 1.25rem;
+    color: var(--hp-3);
+  }
+
+  &__note {
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+}
+
+@keyframes hobby-bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-0.5rem) rotate(-10deg);
+  }
+  60% {
+    transform: translateY(-0.2rem) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hobby__card:hover .hobby__icon {
+    animation: none;
+  }
 }

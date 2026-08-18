@@ -1,14 +1,91 @@
 .about {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(
-    90deg,
-    #ffffff 0,
-    #ffffff 72px,
-    #f8d8e2 72px,
-    #f8d8e2 144px
-  );
+  &__card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    align-items: center;
+    max-width: 46rem;
+    padding: 2rem;
+  }
+
+  &__avatar {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(8rem, 30vw, 12rem);
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 1.25rem;
+      border: 3px solid #fff;
+      box-shadow: 0 0.4rem 1rem var(--hp-glow);
+      background: var(--hp-1);
+    }
+  }
+
+  &__wave {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -0.5rem;
+    font-size: 1.8rem;
+    transform-origin: 70% 70%;
+    animation: about-wave 2.4s ease-in-out infinite;
+  }
+
+  &__body {
+    flex: 1 1 16rem;
+  }
+
+  &__name {
+    margin: 0;
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    color: var(--hp-3);
+  }
+
+  &__role {
+    margin: 0.25rem 0 0.9rem;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  &__bio {
+    margin: 0 0 1.2rem;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  &__facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+@keyframes about-wave {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(18deg);
+  }
+  80% {
+    transform: rotate(-8deg);
+  }
+  90% {
+    transform: rotate(14deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__wave {
+    animation: none;
+  }
 }

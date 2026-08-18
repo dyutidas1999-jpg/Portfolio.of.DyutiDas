@@ -1,0 +1,312 @@
+.features {
+  // One palette drives the whole app; [data-theme] swaps the five stops.
+  --hp-stripe: #f8d8e2;
+  --hp-1: #ffdcef;
+  --hp-2: #ffa3cf;
+  --hp-3: #f76fb3;
+  --hp-4: #c23e80;
+  --hp-glow: rgba(226, 96, 158, 0.4);
+
+  &[data-theme='mint'] {
+    --hp-stripe: #d8f0e8;
+    --hp-1: #ddf8f0;
+    --hp-2: #8adcc6;
+    --hp-3: #38bfa1;
+    --hp-4: #1b7a66;
+    --hp-glow: rgba(45, 160, 135, 0.4);
+  }
+
+  &[data-theme='blueberry'] {
+    --hp-stripe: #d9e8fb;
+    --hp-1: #e6f1ff;
+    --hp-2: #9ec8f5;
+    --hp-3: #5da3e8;
+    --hp-4: #2a5f9e;
+    --hp-glow: rgba(70, 130, 210, 0.4);
+  }
+
+  &[data-theme='lavender'] {
+    --hp-stripe: #e4ddf9;
+    --hp-1: #efe8ff;
+    --hp-2: #bda7f2;
+    --hp-3: #8e6fe0;
+    --hp-4: #5b3fa8;
+    --hp-glow: rgba(120, 90, 200, 0.4);
+  }
+
+  &[data-theme='butter'] {
+    --hp-stripe: #fdedc9;
+    --hp-1: #fff7de;
+    --hp-2: #ffd47a;
+    --hp-3: #f0ab2b;
+    --hp-4: #9d660a;
+    --hp-glow: rgba(220, 160, 40, 0.45);
+  }
+
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: var(--cursor-arrow);
+  background: repeating-linear-gradient(
+    90deg,
+    #ffffff 0,
+    #ffffff 72px,
+    var(--hp-stripe) 72px,
+    var(--hp-stripe) 144px
+  );
+
+  &__floaters {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  &__floater {
+    position: absolute;
+    // Starts below the fold and drifts up past the top.
+    bottom: -3rem;
+    color: var(--hp-2);
+    opacity: 0;
+    animation-name: features-float;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  &__menu-btn {
+    position: fixed;
+    z-index: 20;
+    top: 1.25rem;
+    left: 1.25rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background-image: linear-gradient(180deg, var(--hp-2) 0%, var(--hp-3) 100%);
+    box-shadow: 0 0.25rem 0.75rem var(--hp-glow);
+    cursor: var(--cursor-heart);
+
+    span {
+      width: 1.35rem;
+      height: 0.2rem;
+      border-radius: 999px;
+      background: #fff;
+      transition: transform 200ms ease, opacity 200ms ease;
+    }
+
+    &.is-open span:nth-child(1) {
+      transform: translateY(0.55rem) rotate(45deg);
+    }
+
+    &.is-open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    &.is-open span:nth-child(3) {
+      transform: translateY(-0.55rem) rotate(-45deg);
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(120, 40, 80, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 250ms ease, visibility 250ms ease;
+
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__nav {
+    position: fixed;
+    z-index: 15;
+    inset: 0 auto 0 0;
+    width: min(17rem, 80vw);
+    padding: 5.5rem 1.5rem 2rem;
+    background-image: linear-gradient(160deg, var(--hp-1) 0%, var(--hp-2) 100%);
+    box-shadow: 0.25rem 0 1.5rem var(--hp-glow);
+    transform: translateX(-100%);
+    transition: transform 280ms ease;
+    overflow-y: auto;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    a {
+      display: block;
+      padding: 0.6rem 1rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--hp-4);
+      font-family: 'Baloo 2', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 180ms ease, transform 180ms ease;
+
+      &:hover,
+      &:focus-visible {
+        background: #fff;
+        transform: translateX(0.25rem);
+      }
+    }
+  }
+
+  &__nav-title {
+    margin: 0 0 1rem;
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--hp-4);
+  }
+
+  &__palette {
+    position: fixed;
+    z-index: 20;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0.25rem 0.75rem var(--hp-glow);
+  }
+
+  &__palette-label {
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--hp-4);
+  }
+
+  &__swatch {
+    width: 1.35rem;
+    height: 1.35rem;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0.15rem 0.35rem rgba(0, 0, 0, 0.15);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.2) rotate(8deg);
+    }
+
+    &.is-active {
+      box-shadow: 0 0 0 0.18rem rgba(255, 255, 255, 0.9), 0 0.2rem 0.5rem rgba(0, 0, 0, 0.25);
+      transform: scale(1.15);
+    }
+
+    &--strawberry {
+      background-image: linear-gradient(160deg, #ffa3cf, #f76fb3);
+    }
+
+    &--mint {
+      background-image: linear-gradient(160deg, #8adcc6, #38bfa1);
+    }
+
+    &--blueberry {
+      background-image: linear-gradient(160deg, #9ec8f5, #5da3e8);
+    }
+
+    &--lavender {
+      background-image: linear-gradient(160deg, #bda7f2, #8e6fe0);
+    }
+
+    &--butter {
+      background-image: linear-gradient(160deg, #ffd47a, #f0ab2b);
+    }
+  }
+
+  &__sparks {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  &__spark {
+    position: absolute;
+    color: var(--hp-3);
+    animation: features-spark 750ms ease-out forwards;
+  }
+
+  // Pages render inside the shell, so the shell paints the background.
+  > main {
+    flex: 1;
+    background: none;
+  }
+}
+
+@keyframes features-float {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    opacity: 0.75;
+  }
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift), -105vh) rotate(220deg);
+  }
+}
+
+@keyframes features-spark {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2)
+      rotate(var(--rot));
+  }
+}
+
+@media (max-width: 40rem) {
+  .features__palette-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .features__floaters {
+    display: none;
+  }
+
+  .features__spark {
+    animation-duration: 200ms;
+  }
+}

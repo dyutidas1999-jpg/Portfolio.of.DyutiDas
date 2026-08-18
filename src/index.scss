@@ -20,3 +20,118 @@ button,
 [role='button'] {
   cursor: var(--cursor-heart);
 }
+
+// ---- Shared cute building blocks (pages render inside .features, so the
+// theme --hp-* custom properties are always in scope here) ----
+
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 1.25rem 4rem;
+  color: var(--hp-4);
+  font-family: 'Baloo 2', system-ui, sans-serif;
+}
+
+.page__head {
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: page-drop 700ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+.page__title {
+  margin: 0;
+  font-family: 'Rubik Bubbles', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 1.1;
+  color: #ef7fb6;
+  -webkit-text-stroke: 0.04em #e2609e;
+  text-shadow: 0 0.15rem 0 rgba(255, 255, 255, 0.85);
+}
+
+.page__subtitle {
+  margin: 0.6rem 0 0;
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  font-weight: 600;
+  color: var(--hp-4);
+  opacity: 0.85;
+}
+
+// Frosted pastel card that lifts and tilts on hover.
+.cute-card {
+  position: relative;
+  border: 2px solid #fff;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0.6rem 1.4rem var(--hp-glow);
+  backdrop-filter: blur(2px);
+  transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    box-shadow 220ms ease;
+
+  &:hover,
+  &:focus-within {
+    transform: translateY(-0.4rem) rotate(-0.6deg);
+    box-shadow: 0 1rem 2rem var(--hp-glow);
+  }
+}
+
+// Little rounded pastel tag.
+.cute-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--hp-4);
+  font-family: 'Baloo 2', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 0.25rem 0.6rem var(--hp-glow);
+  transition: transform 180ms ease, background 180ms ease;
+
+  &:hover {
+    transform: translateY(-0.15rem) scale(1.05);
+    background: #fff;
+  }
+}
+
+// Staggered entrance for grids/lists of cards.
+.pop-in {
+  animation: page-pop 620ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  animation-delay: calc(var(--pop, 0) * 90ms);
+}
+
+@keyframes page-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-1.5rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes page-pop {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page__head,
+  .pop-in {
+    animation: none;
+  }
+}

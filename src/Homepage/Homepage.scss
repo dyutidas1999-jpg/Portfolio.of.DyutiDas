@@ -1,127 +1,12 @@
 .homepage {
   position: relative;
   min-height: 100vh;
+  // Scattered letters must not spawn scrollbars.
+  overflow: clip;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: repeating-linear-gradient(
-    90deg,
-    #ffffff 0,
-    #ffffff 72px,
-    #f8d8e2 72px,
-    #f8d8e2 144px
-  );
-
-  &__menu-btn {
-    position: fixed;
-    z-index: 20;
-    top: 1.25rem;
-    left: 1.25rem;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    background-image: linear-gradient(180deg, #ffa3cf 0%, #f76fb3 100%);
-    box-shadow: 0 0.25rem 0.75rem rgba(226, 96, 158, 0.4);
-    cursor: var(--cursor-heart);
-
-    span {
-      width: 1.35rem;
-      height: 0.2rem;
-      border-radius: 999px;
-      background: #fff;
-      transition: transform 200ms ease, opacity 200ms ease;
-    }
-
-    &.is-open span:nth-child(1) {
-      transform: translateY(0.55rem) rotate(45deg);
-    }
-
-    &.is-open span:nth-child(2) {
-      opacity: 0;
-    }
-
-    &.is-open span:nth-child(3) {
-      transform: translateY(-0.55rem) rotate(-45deg);
-    }
-  }
-
-  &__backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: rgba(120, 40, 80, 0.35);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 250ms ease, visibility 250ms ease;
-
-    &.is-open {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  &__nav {
-    position: fixed;
-    z-index: 15;
-    inset: 0 auto 0 0;
-    width: min(17rem, 80vw);
-    padding: 5.5rem 1.5rem 2rem;
-    background-image: linear-gradient(160deg, #ffe3f1 0%, #ffc4e0 100%);
-    box-shadow: 0.25rem 0 1.5rem rgba(226, 96, 158, 0.35);
-    transform: translateX(-100%);
-    transition: transform 280ms ease;
-    overflow-y: auto;
-
-    &.is-open {
-      transform: translateX(0);
-    }
-
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    a {
-      display: block;
-      padding: 0.6rem 1rem;
-      border: 2px solid #fff;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.55);
-      color: #c23e80;
-      font-family: 'Baloo 2', system-ui, sans-serif;
-      font-size: 1.05rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 180ms ease, transform 180ms ease;
-
-      &:hover,
-      &:focus-visible {
-        background: #fff;
-        transform: translateX(0.25rem);
-      }
-    }
-  }
-
-  &__nav-title {
-    margin: 0 0 1rem;
-    font-family: 'Baloo 2', system-ui, sans-serif;
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: #b52f72;
-  }
 
   &__title {
     display: flex;
@@ -134,8 +19,23 @@
 
   &__title-letter {
     position: relative;
+    display: inline-block;
+    // Governs the flight home; the outbound trip is the keyframes below.
+    transition: transform 600ms cubic-bezier(0.22, 1.2, 0.36, 1);
+    transition-delay: calc(var(--i) * 25ms);
+  }
+
+  &__title:hover &__title-letter {
+    animation: homepage-scatter 900ms cubic-bezier(0.3, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--i) * 25ms);
+  }
+
+  &__title-glyph {
+    position: relative;
+    display: inline-block;
     // Base layer: pink outline. Kept thin because text-stroke is centred and a
-    // fat one bleeds inward until the letters blob together.
+    // fat one bleeds inward until the letters blob together. Deliberately not
+    // themed — the name stays strawberry whatever flavour is picked.
     color: #ef7fb6;
     -webkit-text-stroke: 0.05em #e2609e;
     transform-origin: 50% 90%;
@@ -256,14 +156,14 @@
     padding: 0.45em 1em;
     border: 2px solid #fff;
     border-radius: 999px;
-    background-image: linear-gradient(180deg, #ffa3cf 0%, #f76fb3 100%);
+    background-image: linear-gradient(180deg, var(--hp-2) 0%, var(--hp-3) 100%);
     color: #fff;
     font-family: 'Baloo 2', system-ui, sans-serif;
     font-size: clamp(0.8rem, 1.5vw, 1.15rem);
     font-weight: 600;
     line-height: 1.3;
     white-space: nowrap;
-    box-shadow: 0 0.35em 0.9em rgba(226, 96, 158, 0.4);
+    box-shadow: 0 0.35em 0.9em var(--hp-glow);
     opacity: 0;
     transform: translate(-50%, 0.3em) scale(0.9);
     transition: opacity 180ms ease, transform 180ms ease;
@@ -316,6 +216,59 @@
     opacity: 1;
     transform: translate(-50%, -0.5em) scale(1);
   }
+
+  &__chat {
+    position: fixed;
+    z-index: 20;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    max-width: min(20rem, 70vw);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    padding: 0.7rem 1.1rem;
+    border: 2px solid #fff;
+    border-radius: 1.4rem 1.4rem 0.3rem 1.4rem;
+    background-image: linear-gradient(180deg, var(--hp-1) 0%, var(--hp-2) 100%);
+    box-shadow: 0 0.35rem 0.9rem var(--hp-glow);
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    text-align: left;
+    transition: transform 200ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-0.2rem) rotate(-1.5deg);
+    }
+  }
+
+  &__chat-hi {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--hp-4);
+  }
+
+  &__chat-line {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 2px var(--hp-glow);
+    // Re-keyed on every message so the fade replays.
+    animation: homepage-chat 400ms ease;
+  }
+}
+
+@keyframes homepage-chat {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes homepage-bubble {
@@ -335,8 +288,36 @@
   }
 }
 
+@keyframes homepage-scatter {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  28% {
+    transform: translate(var(--cx), var(--cy)) rotate(0deg) scale(0.6);
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1);
+  }
+}
+
+@media (max-width: 40rem) {
+  .homepage__chat {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.5rem 0.85rem;
+  }
+
+  .homepage__chat-line {
+    font-size: 0.9rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .homepage__title-letter {
+  .homepage__title-glyph {
+    animation: none;
+  }
+
+  .homepage__title:hover .homepage__title-letter {
     animation: none;
   }
 }

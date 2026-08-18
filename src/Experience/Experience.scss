@@ -1,14 +1,171 @@
 .experience {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(
-    90deg,
-    #ffffff 0,
-    #ffffff 72px,
-    #f8d8e2 72px,
-    #f8d8e2 144px
-  );
+  &__company {
+    width: min(42rem, 100%);
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1.5rem 1.6rem;
+  }
+
+  &__logo {
+    flex: 0 0 auto;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background-image: linear-gradient(160deg, var(--hp-2), var(--hp-3));
+    box-shadow: 0 0.3rem 0.7rem var(--hp-glow);
+  }
+
+  &__company-body {
+    flex: 1;
+  }
+
+  &__company-name {
+    margin: 0;
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: var(--hp-3);
+  }
+
+  &__company-sub {
+    margin: 0.1rem 0 0.9rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  &__roles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  &__role-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--hp-1);
+  }
+
+  &__role-icon {
+    font-size: 1.1rem;
+  }
+
+  &__role-name {
+    flex: 1;
+    font-weight: 700;
+    color: var(--hp-4);
+  }
+
+  &__role-period {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--hp-3);
+  }
+
+  &__projects-title {
+    margin: 2.5rem 0 1.25rem;
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    color: var(--hp-3);
+    text-align: center;
+  }
+
+  &__grid {
+    width: min(56rem, 100%);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  &__card {
+    padding: 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__card-icon {
+    flex: 0 0 auto;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    border-radius: 50%;
+    background: var(--hp-1);
+    border: 2px solid #fff;
+  }
+
+  &__card-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--hp-4);
+    line-height: 1.2;
+  }
+
+  &__card-role {
+    margin: 0.1rem 0 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--hp-3);
+  }
+
+  &__stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  &__tag {
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--hp-2);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  &__notes {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+    li {
+      line-height: 1.45;
+      font-weight: 500;
+      font-size: 0.92rem;
+    }
+
+    li::marker {
+      content: '♡ ';
+      color: var(--hp-3);
+    }
+  }
 }
