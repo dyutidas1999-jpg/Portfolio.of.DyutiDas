@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Education.scss'
 
 const MILESTONES = [
@@ -25,6 +26,8 @@ const MILESTONES = [
 ]
 
 function Education() {
+  const [open, setOpen] = useState(0)
+
   return (
     <main className="page education">
       <header className="page__head">
@@ -39,15 +42,21 @@ function Education() {
             className="education__item pop-in"
             style={{ '--pop': i + 1 }}
           >
-            <span className="education__badge" aria-hidden="true">
+            <span className="education__badge emoji emoji--wiggle" aria-hidden="true">
               {icon}
             </span>
-            <div className="cute-card education__card">
+            <button
+              type="button"
+              className={`cute-card education__card${open === i ? ' is-open' : ''}`}
+              onClick={() => setOpen(open === i ? -1 : i)}
+              aria-expanded={open === i}
+            >
               <span className="education__period">{period}</span>
               <h2 className="education__title">{title}</h2>
               <p className="education__place">{place}</p>
+              <span className="education__hint">{open === i ? 'Tap to tuck away ↑' : 'Tap to peek inside ↓'}</span>
               <p className="education__note">{note}</p>
-            </div>
+            </button>
           </li>
         ))}
       </ol>

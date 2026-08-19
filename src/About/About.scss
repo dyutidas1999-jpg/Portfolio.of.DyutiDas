@@ -2,10 +2,10 @@
   &__card {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.75rem;
+    gap: 3rem;
     align-items: center;
-    max-width: 46rem;
-    padding: 2rem;
+    max-width: 50rem;
+    padding: 1.5rem;
   }
 
   &__avatar {
@@ -51,6 +51,44 @@
     opacity: 0.9;
   }
 
+  &__fact-button {
+    width: 100%;
+    margin: 0 0 1.1rem;
+    padding: 0.7rem 0.9rem;
+    border: 2px dashed var(--hp-2);
+    border-radius: 1rem;
+    background: var(--hp-1);
+    color: var(--hp-4);
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    text-align: left;
+    cursor: var(--cursor-heart);
+
+    span,
+    strong {
+      display: block;
+    }
+
+    span {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    strong {
+      margin-top: 0.15rem;
+      font-size: 1rem;
+      animation: about-fact-in 300ms ease both;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: #fff;
+      transform: rotate(-1deg);
+    }
+  }
+
   &__bio {
     margin: 0 0 1.2rem;
     line-height: 1.6;
@@ -84,8 +122,34 @@
   }
 }
 
+@keyframes about-fact-in {
+  from { opacity: 0; transform: translateX(0.5rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .about__wave {
     animation: none;
+  }
+
+  .about__fact-button strong {
+    animation: none;
+  }
+}
+
+// Dark-mode surfaces (the light theme leans on literal white fills).
+.features[data-mode='dark'] .about {
+  &__avatar img {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &__fact-button {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.24);
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.14);
+    }
   }
 }

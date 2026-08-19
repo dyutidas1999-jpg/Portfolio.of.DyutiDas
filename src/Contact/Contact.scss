@@ -53,6 +53,39 @@
     }
   }
 
+  &__counter {
+    align-self: flex-end;
+    margin-top: -0.2rem;
+    color: var(--hp-3);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  &__preview {
+    padding: 0.7rem 0.9rem;
+    border-left: 0.25rem solid var(--hp-3);
+    background: var(--hp-1);
+    color: var(--hp-4);
+
+    span,
+    strong {
+      display: block;
+    }
+
+    span {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+
+    strong {
+      margin-top: 0.2rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+  }
+
   &__send {
     align-self: center;
     margin-top: 0.25rem;
@@ -75,6 +108,21 @@
 
     &:active {
       transform: translateY(0) scale(0.98);
+    }
+  }
+}
+
+// Dark-mode surfaces for the form controls.
+.features[data-mode='dark'] .contact {
+  &__field input,
+  &__field textarea {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--hp-4);
+
+    &::placeholder {
+      color: var(--hp-4);
+      opacity: 0.5;
     }
   }
 }

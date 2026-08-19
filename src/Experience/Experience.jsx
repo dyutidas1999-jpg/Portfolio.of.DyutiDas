@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import './Experience.scss'
 
 const ROLES = [
@@ -88,7 +89,28 @@ const PROJECTS = [
   },
 ]
 
+const FILTERS = [
+  { id: 'all', label: 'All little wins' },
+  { id: 'frontend', label: 'Frontend' },
+  { id: 'cloud', label: 'Cloud' },
+  { id: 'backend', label: 'Backend' },
+]
+
+const matchesFilter = (project, filter) => {
+  if (filter === 'all') return true
+  if (filter === 'frontend') return project.role.includes('Frontend')
+  if (filter === 'backend') return project.role.includes('Backend')
+  return project.stack.some((tech) => /Azure|GCP|Citrix|Cloud|Virtual/i.test(tech))
+}
+
 function Experience() {
+  const [filter, setFilter] = useState('all')
+  const [openCard, setOpenCard] = useState(null)
+  const visibleProjects = useMemo(
+    () => PROJECTS.filter((project) => matchesFilter(project, filter)),
+    [filter],
+  )
+
   return (
     <main className="page experience">
       <header className="page__head">
@@ -97,7 +119,7 @@ function Experience() {
       </header>
 
       <section className="cute-card experience__company pop-in">
-        <span className="experience__logo" aria-hidden="true">
+        <span className="experience__logo emoji emoji--wiggle" aria-hidden="true">
           💼
         </span>
         <div className="experience__company-body">
@@ -106,7 +128,7 @@ function Experience() {
           <ul className="experience__roles">
             {ROLES.map(({ icon, role, period }) => (
               <li key={role} className="experience__role-row">
-                <span className="experience__role-icon" aria-hidden="true">
+                <span className="experience__role-icon emoji" aria-hidden="true">
                   {icon}
                 </span>
                 <span className="experience__role-name">{role}</span>
@@ -119,36 +141,61 @@ function Experience() {
 
       <h2 className="experience__projects-title">Projects I&apos;ve loved ✿</h2>
 
-      <section className="experience__grid">
-        {PROJECTS.map(({ icon, name, role, stack, notes }, i) => (
-          <article
-            key={name}
-            className="cute-card experience__card pop-in"
-            style={{ '--pop': i + 1 }}
+      <div className="experience__filters" role="group" aria-label="Filter projects">
+        {FILTERS.map(({ id, label }) => (
+          <button
+            key={id}
+            type="button"
+            className={`cute-chip${filter === id ? ' is-selected' : ''}`}
+            onClick={() => setFilter(id)}
+            aria-pressed={filter === id}
           >
-            <div className="experience__card-head">
-              <span className="experience__card-icon" aria-hidden="true">
-                {icon}
-              </span>
-              <div>
-                <h3 className="experience__card-name">{name}</h3>
-                <p className="experience__card-role">{role}</p>
-              </div>
-            </div>
-            <ul className="experience__stack">
-              {stack.map((tech) => (
-                <li key={tech} className="experience__tag">
-                  {tech}
-                </li>
-              ))}
-            </ul>
-            <ul className="experience__notes">
-              {notes.map((note) => (
-                <li key={note}>{note}</li>
-              ))}
-            </ul>
-          </article>
+            {label}
+          </button>
         ))}
+      </div>
+
+      <section className="experience__grid">
+        {visibleProjects.map(({ icon, name, role, stack, notes }, i) => {
+          const isOpen = openCard === name
+          return (
+            <article
+              key={name}
+              className={`cute-card experience__card pop-in${isOpen ? ' is-open' : ''}`}
+              style={{ '--pop': i + 1 }}
+            >
+              <div className="experience__card-head">
+                <span className="experience__card-icon emoji" aria-hidden="true">
+                  {icon}
+                </span>
+                <div>
+                  <h3 className="experience__card-name">{name}</h3>
+                  <p className="experience__card-role">{role}</p>
+                </div>
+              </div>
+              <ul className="experience__stack">
+                {stack.map((tech) => (
+                  <li key={tech} className="experience__tag">
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                className="experience__toggle"
+                onClick={() => setOpenCard(isOpen ? null : name)}
+                aria-expanded={isOpen}
+              >
+                {isOpen ? 'Tuck away ↑' : 'What I did here ↓'}
+              </button>
+              <ul className={`experience__notes${isOpen ? ' is-open' : ''}`}>
+                {notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </article>
+          )
+        })}
       </section>
     </main>
   )

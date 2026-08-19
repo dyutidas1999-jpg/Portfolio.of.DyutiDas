@@ -47,7 +47,16 @@
   }
 
   &__card {
+    width: 100%;
     padding: 1.1rem 1.4rem;
+    border: 2px solid #fff;
+    text-align: left;
+    cursor: var(--cursor-heart);
+
+    &:hover,
+    &.is-open {
+      transform: translateX(0.35rem) rotate(0.5deg);
+    }
   }
 
   &__period {
@@ -76,8 +85,34 @@
   }
 
   &__note {
+    max-height: 0;
     margin: 0;
+    overflow: hidden;
     line-height: 1.55;
     font-weight: 500;
+    opacity: 0;
+    transition: max-height 250ms ease, opacity 250ms ease, margin 250ms ease;
+
+    .is-open & {
+      max-height: 5rem;
+      margin-top: 0.6rem;
+      opacity: 1;
+    }
+  }
+
+  &__hint {
+    display: block;
+    margin-top: 0.65rem;
+    color: var(--hp-3);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+}
+
+// Dark-mode surfaces: soften the white borders on the timeline.
+.features[data-mode='dark'] .education {
+  &__badge,
+  &__card {
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }

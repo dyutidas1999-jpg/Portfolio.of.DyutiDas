@@ -1,4 +1,41 @@
 .skill {
+  &__focus {
+    width: min(46rem, 100%);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 1.2rem;
+    color: var(--hp-4);
+  }
+
+  &__focus-icon {
+    font-size: 2rem;
+  }
+
+  &__focus-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  &__focus strong {
+    display: block;
+    color: var(--hp-3);
+    font-family: 'Rubik Bubbles', system-ui, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+
+  &__spark-meter {
+    margin-left: auto;
+    color: var(--hp-3);
+    letter-spacing: 0.15em;
+  }
+
   &__groups {
     width: min(46rem, 100%);
     display: flex;
@@ -45,9 +82,32 @@
       transform: translateY(-0.2rem) scale(1.05) rotate(-2deg);
       background: #fff;
     }
+
+    &[aria-pressed='true'] {
+      background: var(--hp-3);
+      color: #fff;
+      transform: translateY(-0.2rem) rotate(2deg) scale(1.04);
+    }
   }
 
   &__badge-icon {
     font-size: 1.1rem;
+  }
+}
+
+// Dark-mode surfaces for the pastel badges.
+.features[data-mode='dark'] .skill {
+  &__badge {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--hp-3);
+      color: #fff;
+    }
   }
 }

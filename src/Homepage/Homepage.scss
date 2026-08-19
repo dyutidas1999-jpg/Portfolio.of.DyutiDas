@@ -35,7 +35,8 @@
     display: inline-block;
     // Base layer: pink outline. Kept thin because text-stroke is centred and a
     // fat one bleeds inward until the letters blob together. Deliberately not
-    // themed — the name stays strawberry whatever flavour is picked.
+    // themed — the name stays strawberry whatever flavour is picked; only
+    // light/dark mode shifts its shade (see the dark override below).
     color: #ef7fb6;
     -webkit-text-stroke: 0.05em #e2609e;
     transform-origin: 50% 90%;
@@ -84,6 +85,9 @@
     max-width: 100%;
     height: auto;
     display: block;
+    border: 0.5rem solid #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 0.5em 1.5em var(--hp-glow), 0 0 0 0.15rem var(--hp-2);
   }
 
   &__hot {
@@ -319,5 +323,15 @@
 
   .homepage__title:hover .homepage__title-letter {
     animation: none;
+  }
+}
+
+// Dark mode brightens the strawberry title so it glows against the night bg.
+.features[data-mode='dark'] .homepage__title-glyph {
+  color: #ffc2e0;
+  -webkit-text-stroke-color: #ff8fc4;
+
+  &::before {
+    background-image: linear-gradient(180deg, #ffe6f3 0%, #ffc2e0 45%, #ff9ccb 100%);
   }
 }

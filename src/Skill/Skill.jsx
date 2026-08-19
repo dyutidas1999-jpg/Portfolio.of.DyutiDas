@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Skill.scss'
 
 const GROUPS = [
@@ -32,12 +33,24 @@ const GROUPS = [
 ]
 
 function Skill() {
+  const [selected, setSelected] = useState('React')
+  const selectedSkill = GROUPS.flatMap(({ skills }) => skills).find(({ name }) => name === selected)
+
   return (
     <main className="page skill">
       <header className="page__head">
         <h1 className="page__title">My Skills</h1>
         <p className="page__subtitle">The little toolkit I build with ✩</p>
       </header>
+
+      <div className="skill__focus cute-card" aria-live="polite">
+        <span className="skill__focus-icon emoji emoji--wiggle">{selectedSkill?.icon}</span>
+        <div>
+          <span className="skill__focus-label">Currently brewing with</span>
+          <strong>{selected}</strong>
+        </div>
+        <span className="skill__spark-meter" aria-label="Skill confidence: high">✦ ✦ ✦</span>
+      </div>
 
       <div className="skill__groups">
         {GROUPS.map(({ title, skills }, g) => (
@@ -49,8 +62,13 @@ function Skill() {
                   key={name}
                   className="skill__badge pop-in"
                   style={{ '--pop': g * 3 + i + 1 }}
+                  onClick={() => setSelected(name)}
+                  role="button"
+                  tabIndex="0"
+                  onKeyDown={(event) => event.key === 'Enter' && setSelected(name)}
+                  aria-pressed={selected === name}
                 >
-                  <span className="skill__badge-icon" aria-hidden="true">
+                  <span className="skill__badge-icon emoji" aria-hidden="true">
                     {icon}
                   </span>
                   {name}

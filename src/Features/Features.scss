@@ -43,6 +43,28 @@
     --hp-glow: rgba(220, 160, 40, 0.45);
   }
 
+  // ---- Dark mode: keeps the flavour accents (--hp-2/--hp-3) but swaps the
+  // page background, surfaces and text for night-friendly tones. Works on top
+  // of any [data-theme]. ----
+  &[data-mode='dark'] {
+    // Repurpose the lightest tint as a dark surface and the darkest as light
+    // text so existing var() references adapt automatically.
+    --hp-1: #2c2536;
+    --hp-4: #ffe1f1;
+    --hp-glow: rgba(0, 0, 0, 0.45);
+    --surface: rgba(48, 40, 58, 0.82);
+    --surface-border: rgba(255, 255, 255, 0.16);
+
+    background: repeating-linear-gradient(
+      90deg,
+      #1c1824 0,
+      #1c1824 72px,
+      #241f2f 72px,
+      #241f2f 144px
+    );
+    color: var(--hp-4);
+  }
+
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -114,6 +136,60 @@
     }
   }
 
+  &__back {
+    position: fixed;
+    z-index: 20;
+    top: 1.25rem;
+    left: 4.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 3rem;
+    padding: 0 1rem 0 0.85rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background-image: linear-gradient(180deg, var(--hp-1) 0%, var(--hp-2) 100%);
+    color: var(--hp-4);
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 0.25rem 0.75rem var(--hp-glow);
+    cursor: var(--cursor-heart);
+    animation: features-back-in 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: translateX(-0.2rem) scale(1.05);
+      box-shadow: 0 0.5rem 1.1rem var(--hp-glow);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &-arrow {
+      font-size: 1.25rem;
+      line-height: 1;
+      transition: transform 180ms ease;
+    }
+
+    &:hover &-arrow {
+      transform: translateX(-0.2rem);
+    }
+  }
+
+  @keyframes features-back-in {
+    from {
+      opacity: 0;
+      transform: translateX(-1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   &__backdrop {
     position: fixed;
     inset: 0;
@@ -171,6 +247,12 @@
       &:focus-visible {
         background: #fff;
         transform: translateX(0.25rem);
+      }
+
+      &.is-current {
+        background: var(--hp-3);
+        color: #fff;
+        box-shadow: 0 0.25rem 0 var(--hp-4);
       }
     }
   }
@@ -246,11 +328,519 @@
     }
   }
 
+  &__mode {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    margin-left: 0.15rem;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--hp-1);
+    font-size: 0.95rem;
+    line-height: 1;
+    box-shadow: 0 0.15rem 0.4rem var(--hp-glow);
+    cursor: var(--cursor-heart);
+    transition: transform 180ms ease, background 180ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.15) rotate(-12deg);
+      background: #fff;
+    }
+  }
+
+  // ---- Floating message inbox bubble (bottom-left, above the status pill) ----
+  &__inbox {
+    position: fixed;
+    z-index: 25;
+    left: 1.25rem;
+    bottom: 4.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  &__inbox-button {
+    position: relative;
+    width: 3.6rem;
+    height: 3.6rem;
+    padding: 0;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background-image: linear-gradient(180deg, var(--hp-2) 0%, var(--hp-3) 100%);
+    box-shadow: 0 0.4rem 1rem var(--hp-glow);
+    cursor: var(--cursor-heart);
+    animation: features-companion-float 3.4s ease-in-out infinite;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: rotate(-6deg) scale(1.08);
+      box-shadow: 0 0.6rem 1.3rem var(--hp-glow);
+    }
+
+    small {
+      position: absolute;
+      top: -0.4rem;
+      right: -0.3rem;
+      min-width: 1.3rem;
+      padding: 0.1rem 0.3rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: var(--hp-4);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+  }
+
+  &__inbox-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  &__inbox-panel {
+    width: min(21rem, 82vw);
+    max-height: 60vh;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+    border: 2px solid #fff;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0.8rem 1.8rem var(--hp-glow);
+    backdrop-filter: blur(4px);
+    animation: features-inbox-pop 320ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  }
+
+  &__inbox-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+
+    strong {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Baloo 2', system-ui, sans-serif;
+      font-size: 1.1rem;
+      color: var(--hp-4);
+    }
+
+    button {
+      padding: 0.3rem 0.75rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: var(--hp-1);
+      color: var(--hp-4);
+      font-family: 'Baloo 2', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: var(--cursor-heart);
+      transition: transform 160ms ease, background 160ms ease;
+
+      &:hover,
+      &:focus-visible {
+        transform: scale(1.05);
+        background: var(--hp-2);
+        color: #fff;
+      }
+    }
+  }
+
+  &__inbox-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--hp-3);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  &__inbox-empty {
+    margin: 0;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--hp-4);
+  }
+
+  &__inbox-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  &__inbox-note {
+    position: relative;
+    padding: 0.7rem 2.1rem 0.7rem 0.85rem;
+    border: 2px solid var(--hp-1);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    text-align: left;
+    animation: features-inbox-note-in 320ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+
+    p {
+      margin: 0.25rem 0 0;
+      line-height: 1.4;
+      font-weight: 500;
+      color: var(--hp-4);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+
+  &__inbox-note-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    span {
+      font-weight: 700;
+      color: var(--hp-4);
+    }
+
+    time {
+      flex: 0 0 auto;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--hp-3);
+      opacity: 0.85;
+    }
+  }
+
+  &__inbox-remove {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.45rem;
+    height: 1.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: var(--hp-1);
+    color: var(--hp-4);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: var(--cursor-heart);
+    transition: transform 160ms ease, background 160ms ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.15) rotate(90deg);
+      background: var(--hp-2);
+      color: #fff;
+    }
+  }
+
   &__sparks {
     position: fixed;
     inset: 0;
     z-index: 30;
     pointer-events: none;
+  }
+
+  &__route {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    animation: features-route-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  }
+
+  &__status {
+    position: fixed;
+    z-index: 8;
+    left: 1.25rem;
+    bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.85rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--hp-4);
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 0 0.25rem 0.75rem var(--hp-glow);
+    backdrop-filter: blur(4px);
+
+    time {
+      padding-left: 0.45rem;
+      border-left: 1px solid currentColor;
+      opacity: 0.7;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__status-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #42c894;
+    box-shadow: 0 0 0 0.22rem rgba(66, 200, 148, 0.18);
+    animation: features-pulse 1.8s ease-out infinite;
+  }
+
+  &__companion {
+    position: fixed;
+    z-index: 25;
+    right: 1.25rem;
+    bottom: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  &__companion-button {
+    position: relative;
+    width: 4.2rem;
+    height: 4.2rem;
+    padding: 0;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--hp-1);
+    color: #fff;
+    box-shadow: 0 0.4rem 1rem var(--hp-glow);
+    cursor: var(--cursor-heart);
+    animation: features-companion-float 3s ease-in-out infinite;
+    transition: transform 180ms ease, background 180ms ease;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--hp-2);
+      transform: rotate(6deg) scale(1.08);
+    }
+
+    small {
+      position: absolute;
+      top: -0.4rem;
+      right: -0.25rem;
+      min-width: 1.25rem;
+      padding: 0.1rem 0.25rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: var(--hp-4);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+  }
+
+  &__buddy {
+    position: relative;
+    display: block;
+    width: 2.9rem;
+    height: 2.9rem;
+    margin: auto;
+  }
+
+  &__buddy-face {
+    position: absolute;
+    z-index: 2;
+    inset: 0.35rem 0.15rem 0;
+    display: block;
+    border: 2px solid var(--hp-4);
+    border-radius: 48% 48% 45% 45%;
+    background: #fff8f2;
+    box-shadow: inset 0 -0.25rem 0 var(--hp-1);
+
+    i,
+    b,
+    em {
+      position: absolute;
+      display: block;
+    }
+
+    i {
+      top: 0.85rem;
+      width: 0.28rem;
+      height: 0.38rem;
+      border-radius: 50%;
+      background: var(--hp-4);
+
+      &:nth-child(1) { left: 0.7rem; }
+      &:nth-child(2) { right: 0.7rem; }
+    }
+
+    b {
+      left: 50%;
+      top: 1.25rem;
+      width: 0.32rem;
+      height: 0.24rem;
+      border-radius: 50%;
+      background: var(--hp-3);
+      transform: translateX(-50%);
+    }
+
+    em {
+      top: 1.55rem;
+      width: 0.22rem;
+      height: 0.12rem;
+      border-bottom: 2px solid var(--hp-4);
+      border-radius: 50%;
+
+      &:nth-child(4) { left: 0.85rem; transform: rotate(25deg); }
+      &:nth-child(5) { right: 0.85rem; transform: rotate(-25deg); }
+    }
+  }
+
+  &__buddy-ear {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    width: 1rem;
+    height: 1.15rem;
+    border: 2px solid var(--hp-4);
+    border-radius: 70% 30% 55% 45%;
+    background: var(--hp-2);
+
+    &--left { left: 0.15rem; transform: rotate(-25deg); }
+    &--right { right: 0.15rem; transform: scaleX(-1) rotate(-25deg); }
+  }
+
+  &[data-home='true'] &__companion {
+    display: none;
+  }
+
+  &__companion-card {
+    width: min(15rem, calc(100vw - 2rem));
+    padding: 0.9rem 1rem;
+    border: 2px solid #fff;
+    border-radius: 1.2rem 1.2rem 0.3rem 1.2rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--hp-4);
+    box-shadow: 0 0.55rem 1.3rem var(--hp-glow);
+    animation: features-card-pop 240ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+
+    span,
+    strong,
+    p {
+      display: block;
+    }
+
+    p {
+      margin: 0.2rem 0 0.7rem;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    strong {
+      color: var(--hp-3);
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.4rem 0.7rem;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      background: var(--hp-2);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: var(--cursor-heart);
+    }
+  }
+
+  &__passport {
+    margin-top: 0.85rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--hp-2);
+  }
+
+  &__passport-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  &__passport-stickers {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  &__sticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
+    filter: grayscale(1);
+    opacity: 0.4;
+    transition: transform 200ms ease, opacity 200ms ease, filter 200ms ease;
+
+    &.is-collected {
+      filter: grayscale(0);
+      opacity: 1;
+      background: #fff;
+      box-shadow: 0 0.2rem 0.5rem var(--hp-glow);
+      animation: features-sticker-pop 420ms cubic-bezier(0.22, 1.2, 0.36, 1);
+    }
+  }
+
+  &__toast {
+    position: fixed;
+    z-index: 40;
+    top: 1.25rem;
+    left: 50%;
+    max-width: min(90vw, 26rem);
+    padding: 0.6rem 1.15rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background-image: linear-gradient(135deg, var(--hp-2), var(--hp-3));
+    color: #fff;
+    text-align: center;
+    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 0.5rem 1.2rem var(--hp-glow);
+    transform: translateX(-50%);
+    animation: features-toast-in 320ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    pointer-events: none;
+  }
+
+  &__companion-eyebrow {
+    margin-bottom: 0.2rem;
+    color: var(--hp-4);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.65;
   }
 
   &__spark {
@@ -295,8 +885,81 @@
   }
 }
 
+@keyframes features-route-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.1rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes features-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0.15rem rgba(66, 200, 148, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 0.38rem rgba(66, 200, 148, 0.04);
+  }
+}
+
+@keyframes features-companion-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-0.35rem) rotate(3deg); }
+}
+
+@keyframes features-card-pop {
+  from { opacity: 0; transform: translateY(0.5rem) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes features-inbox-pop {
+  from { opacity: 0; transform: translateY(0.6rem) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes features-inbox-note-in {
+  from { opacity: 0; transform: translateX(-0.6rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes features-sticker-pop {
+  0% { transform: scale(0.4) rotate(-15deg); }
+  60% { transform: scale(1.2) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes features-toast-in {
+  from { opacity: 0; transform: translate(-50%, -0.6rem) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
 @media (max-width: 40rem) {
   .features__palette-label {
+    display: none;
+  }
+
+  .features__status {
+    left: 0.75rem;
+    bottom: 0.75rem;
+    max-width: calc(100vw - 1.5rem);
+    font-size: 0.74rem;
+  }
+
+  .features__companion {
+    right: 0.75rem;
+    bottom: 4.1rem;
+  }
+
+  .features__inbox {
+    left: 0.75rem;
+    bottom: 4.1rem;
+  }
+
+  .features__status time {
     display: none;
   }
 }
@@ -309,4 +972,88 @@
   .features__spark {
     animation-duration: 200ms;
   }
+
+  .features__route,
+  .features__status-dot,
+  .features__companion-button,
+  .features__inbox-button,
+  .features__inbox-panel,
+  .features__inbox-note,
+  .features__sticker.is-collected,
+  .features__toast {
+    animation: none;
+  }
 }
+
+// ---- Dark-mode surface tweaks for shell chrome that uses literal whites ----
+.features[data-mode='dark'] {
+  .features__nav a {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--hp-4);
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .features__palette,
+  .features__status {
+    background: rgba(40, 33, 50, 0.82);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .features__menu-btn,
+  .features__back,
+  .features__mode,
+  .features__swatch,
+  .features__companion-button {
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .features__mode {
+    background: rgba(255, 255, 255, 0.08);
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+
+  .features__sticker {
+    background: rgba(255, 255, 255, 0.06);
+
+    &.is-collected {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .features__companion-card {
+    background: rgba(48, 40, 58, 0.94);
+    color: var(--hp-4);
+  }
+
+  .features__inbox-panel {
+    background: rgba(40, 33, 50, 0.94);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .features__inbox-note {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .features__inbox-head button,
+  .features__inbox-remove {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--hp-4);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--hp-2);
+      color: #fff;
+    }
+  }
+}
+

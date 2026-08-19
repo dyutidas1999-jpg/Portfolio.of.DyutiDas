@@ -1,4 +1,24 @@
 .hobby {
+  &__loved-count {
+    margin: -0.75rem 0 1rem;
+    font-weight: 700;
+    color: var(--hp-4);
+    text-align: center;
+  }
+
+  &__moods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem;
+    margin-bottom: 1.25rem;
+
+    button.is-selected {
+      background: var(--hp-3);
+      color: #fff;
+    }
+  }
+
   &__grid {
     width: min(48rem, 100%);
     display: grid;
@@ -7,11 +27,29 @@
   }
 
   &__card {
+    position: relative;
     padding: 1.5rem 1.25rem;
     text-align: center;
 
     &:hover .hobby__icon {
       animation: hobby-bounce 700ms ease;
+    }
+  }
+
+  &__love {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.7rem;
+    border: 0;
+    background: transparent;
+    color: var(--hp-3);
+    font-size: 1.5rem;
+    cursor: var(--cursor-heart);
+    transition: transform 180ms ease;
+
+    &:hover,
+    &.is-loved {
+      transform: scale(1.25) rotate(-10deg);
     }
   }
 

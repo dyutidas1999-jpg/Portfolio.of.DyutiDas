@@ -31,9 +31,10 @@ button,
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem 1.25rem 4rem;
+  padding: 2rem;
   color: var(--hp-4);
   font-family: 'Baloo 2', system-ui, sans-serif;
+
 }
 
 .page__head {
@@ -48,8 +49,8 @@ button,
   font-weight: 400;
   font-size: clamp(2.2rem, 6vw, 4rem);
   line-height: 1.1;
-  color: #ef7fb6;
-  -webkit-text-stroke: 0.04em #e2609e;
+  // Follows the chosen flavour instead of a fixed strawberry pink.
+  color: var(--hp-3);
   text-shadow: 0 0.15rem 0 rgba(255, 255, 255, 0.85);
 }
 
@@ -61,7 +62,8 @@ button,
   opacity: 0.85;
 }
 
-// Frosted pastel card that lifts and tilts on hover.
+// Frosted pastel card that lifts, tilts toward the cursor and catches a
+// little shine — .features tracks pointer position via delegated listeners.
 .cute-card {
   position: relative;
   border: 2px solid #fff;
@@ -69,15 +71,44 @@ button,
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 0.6rem 1.4rem var(--hp-glow);
   backdrop-filter: blur(2px);
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1),
     box-shadow 220ms ease;
 
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    background: radial-gradient(
+      220px circle at var(--shine-x, 50%) var(--shine-y, 50%),
+      rgba(255, 255, 255, 0.5),
+      transparent 62%
+    );
+    opacity: 0;
+    mix-blend-mode: soft-light;
+    transition: opacity 220ms ease;
+    pointer-events: none;
+  }
+
   &:hover,
   &:focus-within {
-    transform: translateY(-0.4rem) rotate(-0.6deg);
+    transform: perspective(900px) translateY(-0.4rem)
+      rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
     box-shadow: 0 1rem 2rem var(--hp-glow);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: perspective(900px) scale(0.97) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg));
   }
 }
+
 
 // Little rounded pastel tag.
 .cute-chip {
@@ -98,6 +129,37 @@ button,
   &:hover {
     transform: translateY(-0.15rem) scale(1.05);
     background: #fff;
+  }
+}
+
+// Emoji stay their natural colour; the class only gives them a tidy inline box
+// so hover animations behave.
+.emoji {
+  display: inline-block;
+}
+
+.emoji--white {
+  display: inline-block;
+}
+
+// A gentle wiggle any decorative emoji can opt into on hover.
+.emoji--wiggle:hover {
+  animation: emoji-wiggle 600ms ease;
+}
+
+@keyframes emoji-wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-12deg) scale(1.15);
+  }
+  50% {
+    transform: rotate(10deg) scale(1.15);
+  }
+  75% {
+    transform: rotate(-6deg) scale(1.1);
   }
 }
 
@@ -131,7 +193,40 @@ button,
 
 @media (prefers-reduced-motion: reduce) {
   .page__head,
-  .pop-in {
+  .pop-in,
+  .emoji--wiggle:hover {
     animation: none;
+  }
+}
+
+// ---- Dark-mode overrides for the shared building blocks (which otherwise use
+// literal white surfaces). Scoped to the shell so light mode is untouched. ----
+.features[data-mode='dark'] {
+  .page {
+    color: var(--hp-4);
+  }
+
+  .cute-card {
+    background: var(--surface);
+    border-color: var(--surface-border);
+  }
+
+  .cute-chip {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--surface-border);
+    color: var(--hp-4);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .page__title {
+    // In light mode the outline is the darkest accent; in dark that var flips to
+    // near-white and reads like light mode leaked in. Brighten the fill and give
+    // it a soft dark outline instead.
+    color: var(--hp-2);
+    -webkit-text-stroke-color: rgba(0, 0, 0, 0.35);
+    text-shadow: 0 0.15rem 0 rgba(0, 0, 0, 0.35);
   }
 }

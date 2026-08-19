@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Hobby.scss'
 
 const HOBBIES = [
@@ -15,7 +16,33 @@ const HOBBIES = [
   { icon: '💫', name: '…and many more', note: 'Forever curious, forever collecting hobbies.' },
 ]
 
+const MOODS = [
+  { id: 'all', label: 'All the joys' },
+  { id: 'create', label: 'Make things' },
+  { id: 'cozy', label: 'Cozy mode' },
+  { id: 'adventure', label: 'Go places' },
+]
+
+const MOOD_BY_HOBBY = {
+  Craftworks: 'create',
+  'Reading fiction': 'cozy',
+  Travelling: 'adventure',
+  'Button collecting': 'cozy',
+  'Playing piano': 'create',
+  Music: 'cozy',
+  'Dress designing': 'create',
+  Movies: 'cozy',
+  Photography: 'adventure',
+  Painting: 'create',
+  'Shopping pink': 'adventure',
+  '…and many more': 'adventure',
+}
+
 function Hobby() {
+  const [mood, setMood] = useState('all')
+  const [loved, setLoved] = useState([])
+  const visibleHobbies = HOBBIES.filter(({ name }) => mood === 'all' || MOOD_BY_HOBBY[name] === mood)
+
   return (
     <main className="page hobby">
       <header className="page__head">
@@ -23,14 +50,36 @@ function Hobby() {
         <p className="page__subtitle">The things that make me smile ♬</p>
       </header>
 
+      <p className="hobby__loved-count" aria-live="polite">
+        {loved.length === 0
+          ? 'Tap the little hearts on the ones you love ♡'
+          : `You loved ${loved.length} ${loved.length === 1 ? 'hobby' : 'hobbies'} ♥`}
+      </p>
+
+      <div className="hobby__moods" role="group" aria-label="Filter hobbies by mood">
+        {MOODS.map(({ id, label }) => (
+          <button key={id} type="button" className={`cute-chip${mood === id ? ' is-selected' : ''}`} onClick={() => setMood(id)} aria-pressed={mood === id}>
+            {label}
+          </button>
+        ))}
+      </div>
+
       <section className="hobby__grid">
-        {HOBBIES.map(({ icon, name, note }, i) => (
+        {visibleHobbies.map(({ icon, name, note }, i) => (
           <article
             key={name}
             className="cute-card hobby__card pop-in"
             style={{ '--pop': i + 1 }}
           >
-            <span className="hobby__icon" aria-hidden="true">
+            <button
+              type="button"
+              className={`hobby__love${loved.includes(name) ? ' is-loved' : ''}`}
+              onClick={() => setLoved((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name])}
+              aria-label={`${loved.includes(name) ? 'Unfavourite' : 'Favourite'} ${name}`}
+            >
+              {loved.includes(name) ? '♥' : '♡'}
+            </button>
+            <span className="hobby__icon emoji emoji--wiggle" aria-hidden="true">
               {icon}
             </span>
             <h2 className="hobby__name">{name}</h2>
