@@ -12,6 +12,7 @@ const HOBBIES = [
   { icon: '🎬', name: 'Movies', note: 'Horror & thriller, the spookier the better.' },
   { icon: '📷', name: 'Photography', note: 'Still life & nature through a soft lens.' },
   { icon: '🎨', name: 'Painting', note: 'Watercolour & acrylic, splashes everywhere.' },
+  { icon: '🍳', name: 'Cooking', note: 'Making something delicious from a little bit of everything.' },
   { icon: '🛍️', name: 'Shopping pink', note: "If it's pink, it's already in my cart." },
   { icon: '💫', name: '…and many more', note: 'Forever curious, forever collecting hobbies.' },
 ]
@@ -34,6 +35,7 @@ const MOOD_BY_HOBBY = {
   Movies: 'cozy',
   Photography: 'adventure',
   Painting: 'create',
+  Cooking: 'create',
   'Shopping pink': 'adventure',
   '…and many more': 'adventure',
 }

@@ -84,7 +84,7 @@ function Contact() {
           />
         </label>
         <label className="contact__field">
-          <span>Your message</span>
+          <span>Your comment</span>
           <textarea
             rows={4}
             value={message}
@@ -100,12 +100,12 @@ function Contact() {
         </label>
         <div className="contact__preview" aria-live="polite">
           <span>
-            {justSent ? 'Popped into your inbox bubble ♡' : 'Tiny preview'}
+            {justSent ? 'Popped into your comment box ♡' : 'Tiny preview'}
           </span>
-          <strong>{message || 'Your lovely message will appear here...'}</strong>
+          <strong>{message || 'Your lovely comment will appear here...'}</strong>
         </div>
         <button type="submit" className="contact__send">
-          Drop in the inbox{' '}
+          Drop in the comment box{' '}
           <span className="emoji" aria-hidden="true">
             💌
           </span>

@@ -175,7 +175,7 @@ function Features({ children }) {
   }, [celebration])
 
   useEffect(() => {
-    const id = setInterval(() => setTime(new Date()), 60_000)
+    const id = setInterval(() => setTime(new Date()), 1_000)
     return () => clearInterval(id)
   }, [])
 
@@ -387,6 +387,10 @@ function Features({ children }) {
       </div>
 
       <div className="features__route" key={location.pathname}>
+        <div className="features__loader" role="status" aria-label="Loading page">
+          <span className="features__loader-heart" aria-hidden="true">♡</span>
+          <span>Loading a little magic...</span>
+        </div>
         {children}
       </div>
 
@@ -395,7 +399,7 @@ function Features({ children }) {
           <div className="features__inbox-panel">
             <div className="features__inbox-head">
               <strong>
-                Message inbox <span className="features__inbox-count">{inbox.length}</span>
+                Comment Box <span className="features__inbox-count">{inbox.length}</span>
               </strong>
               {inbox.length > 0 && (
                 <button type="button" onClick={clearInbox}>
@@ -405,7 +409,7 @@ function Features({ children }) {
             </div>
             {inbox.length === 0 ? (
               <p className="features__inbox-empty">
-                No notes yet — send one from the Contact me page 🕊️
+                No comments yet — send one from the Contact me page 🕊️
               </p>
             ) : (
               <ul className="features__inbox-list">
@@ -420,7 +424,7 @@ function Features({ children }) {
                       type="button"
                       className="features__inbox-remove"
                       onClick={() => removeNote(id)}
-                      aria-label={`Delete message from ${name}`}
+                      aria-label={`Delete comment from ${name}`}
                     >
                       ✕
                     </button>
@@ -434,7 +438,7 @@ function Features({ children }) {
           type="button"
           className="features__inbox-button"
           onClick={() => setInboxOpen((open) => !open)}
-          aria-label={inboxOpen ? 'Close message inbox' : 'Open message inbox'}
+          aria-label={inboxOpen ? 'Close comment box' : 'Open comment box'}
           aria-expanded={inboxOpen}
         >
           <span className="features__inbox-icon" aria-hidden="true">
@@ -497,10 +501,15 @@ function Features({ children }) {
       </section>
 
       <aside className="features__status" aria-label="Portfolio status">
-        <span className="features__status-dot" aria-hidden="true" />
-        <span>Available for delightful builds</span>
         <time dateTime={time.toISOString()}>
-          {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {time.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+        </time>
+        <time dateTime={time.toISOString()}>
+          {time.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })}
         </time>
       </aside>
 
