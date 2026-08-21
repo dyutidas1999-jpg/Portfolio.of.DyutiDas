@@ -13,6 +13,16 @@
     text-decoration: none;
   }
 
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+
+    svg {
+      display: block;
+    }
+  }
+
   &__form {
     width: min(30rem, 100%);
     padding: 1.75rem;

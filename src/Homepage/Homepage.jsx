@@ -2,28 +2,18 @@ import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Homepage.scss'
 import theGirl from '../images/the_girl.png'
+import SparklePop from './SparklePop'
+import PetalEcho from './PetalEcho'
 
-const TITLE = "Dyuti's Portfolio"
+const TITLE = "200 OK // Connection Successful — Welcome to My Pink Corner"
 
 const CHATS = [
-  'Hover my name and watch it explode ✧',
+  'Hover the title to pause the scroll ✧',
   'Every bit of the picture is clickable ♡',
   'Tap anywhere for a little sparkle ✩',
   'Pick a flavour up there, top right ✿',
   'Brewed with chai and too many semicolons ♬',
 ]
-
-// Random direction + reach; the letters all launch from the title's centre.
-const makeScatter = () =>
-  [...TITLE].map(() => {
-    const angle = Math.random() * Math.PI * 2
-    const reach = 0.55 + Math.random() * 0.45
-    return {
-      ux: Math.cos(angle) * reach,
-      uy: Math.sin(angle) * reach,
-      rot: (Math.random() - 0.5) * 720,
-    }
-  })
 
 const greetingFor = (hour) => {
   if (hour < 12) return 'Good morning'
@@ -43,11 +33,9 @@ const HOTSPOTS = [
 
 function Homepage() {
   const navigate = useNavigate()
-  const [scatter, setScatter] = useState(makeScatter)
-  const [centers, setCenters] = useState(() => [...TITLE].map(() => ({ cx: 0, cy: 0 })))
   const [chat, setChat] = useState(0)
   const titleRef = useRef(null)
-  const letterRefs = useRef([])
+  const [marquee, setMarquee] = useState({ start: 0, end: 0, duration: 18 })
 
   useEffect(() => {
     const id = setInterval(() => setChat((c) => (c + 1) % CHATS.length), 6000)
@@ -55,23 +43,16 @@ function Homepage() {
   }, [])
 
   useLayoutEffect(() => {
-    // offsetLeft/Top instead of rects: the glyphs are mid-animation and rects
-    // would bake the wobble into the measurement.
     const measure = () => {
       const title = titleRef.current
       if (!title) return
-      const midX = title.offsetLeft + title.offsetWidth / 2
-      const midY = title.offsetTop + title.offsetHeight / 2
-      setCenters(
-        letterRefs.current.map((el) =>
-          el
-            ? {
-                cx: midX - (el.offsetLeft + el.offsetWidth / 2),
-                cy: midY - (el.offsetTop + el.offsetHeight / 2),
-              }
-            : { cx: 0, cy: 0 },
-        ),
-      )
+      // Marquee runs from the box's right edge to just past its left edge at a
+      // constant speed, so a wide title neither drifts in late nor leaves a gap.
+      const boxWidth = title.parentElement?.offsetWidth ?? 0
+      const titleWidth = title.offsetWidth
+      const distance = boxWidth + titleWidth
+      const SPEED = 90 // px per second
+      setMarquee({ start: boxWidth, end: -titleWidth, duration: distance / SPEED })
     }
 
     measure()
@@ -81,61 +62,64 @@ function Homepage() {
 
   return (
     <main className="homepage">
-      <h1
-        ref={titleRef}
-        className="homepage__title"
-        aria-label={TITLE}
-        // Reshuffled on the way out so the next hover is always a new scatter.
-        onMouseLeave={() => setScatter(makeScatter())}
-      >
-        {[...TITLE].map((char, i) => {
-          const glyph = char === ' ' ? '\u00A0' : char
-          const { cx, cy } = centers[i]
-          const { ux, uy, rot } = scatter[i]
-          return (
-            <span
-              key={i}
-              ref={(el) => {
-                letterRefs.current[i] = el
-              }}
-              className="homepage__title-letter"
-              style={{
-                '--i': i,
-                '--cx': `${cx}px`,
-                '--cy': `${cy}px`,
-                '--dx': `calc(${cx}px + ${(ux * 45).toFixed(2)}vw)`,
-                '--dy': `calc(${cy}px + ${(uy * 40).toFixed(2)}vh)`,
-                '--rot': `${rot.toFixed(1)}deg`,
-              }}
-              aria-hidden="true"
-            >
-              <span className="homepage__title-glyph" data-letter={glyph}>
-                {glyph}
+      <div className="homepage__title-box">
+        <h1
+          ref={titleRef}
+          className="homepage__title"
+          aria-label={TITLE}
+          style={{
+            '--m-start': `${marquee.start}px`,
+            '--m-end': `${marquee.end}px`,
+            animationDuration: `${marquee.duration}s`,
+          }}
+        >
+          {[...TITLE].map((char, i) => {
+            const glyph = char === ' ' ? '\u00A0' : char
+            return (
+              <span
+                key={i}
+                className="homepage__title-letter"
+                style={{ '--i': i }}
+                aria-hidden="true"
+              >
+                <span className="homepage__title-glyph" data-letter={glyph}>
+                  {glyph}
+                </span>
               </span>
-            </span>
-          )
-        })}
-      </h1>
-      <div className="homepage__hero-wrap">
-        <img
-          className="homepage__hero"
-          src={theGirl}
-          alt="Illustration of Dyuti waving while working at a laptop"
-        />
-        {HOTSPOTS.map(({ id, to, label, tip }) => (
-          <Fragment key={id}>
-            <button
-              type="button"
-              className={`homepage__hot homepage__hot--${id}`}
-              onClick={() => navigate(to)}
-              aria-label={label}
-            />
-            {/* tooltip is a sibling, not a pseudo-element: the hotspots are clipped */}
-            <span className={`homepage__tip homepage__tip--${id}`} aria-hidden="true">
-              {tip}
-            </span>
-          </Fragment>
-        ))}
+            )
+          })}
+        </h1>
+      </div>
+      <div className="homepage__stage">
+        <aside className="homepage__game homepage__game--left">
+          <SparklePop />
+        </aside>
+
+        <div className="homepage__hero-wrap">
+          <img
+            className="homepage__hero"
+            src={theGirl}
+            alt="Illustration of Dyuti waving while working at a laptop"
+          />
+          {HOTSPOTS.map(({ id, to, label, tip }) => (
+            <Fragment key={id}>
+              <button
+                type="button"
+                className={`homepage__hot homepage__hot--${id}`}
+                onClick={() => navigate(to)}
+                aria-label={label}
+              />
+              {/* tooltip is a sibling, not a pseudo-element: the hotspots are clipped */}
+              <span className={`homepage__tip homepage__tip--${id}`} aria-hidden="true">
+                {tip}
+              </span>
+            </Fragment>
+          ))}
+        </div>
+
+        <aside className="homepage__game homepage__game--right">
+          <PetalEcho />
+        </aside>
       </div>
 
       <button

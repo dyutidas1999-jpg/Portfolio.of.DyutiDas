@@ -2,15 +2,6 @@ import { useState } from 'react'
 import './About.scss'
 import theGirl from '../images/the_girl.png'
 
-const FACTS = [
-  { icon: '💗', label: 'Forever team pink' },
-  { icon: '🎹', label: 'Plays a little piano' },
-  { icon: '📚', label: 'Fiction over reality' },
-  { icon: '🎨', label: 'Watercolour & acrylic' },
-  { icon: '✈️', label: 'Always up for travel' },
-  { icon: '🔘', label: 'Secretly collects buttons' },
-]
-
 const TINY_FACTS = [
   '🍝 I make a very good plate of pasta.',
   '🧼 I love keeping everything hygienic and organized.',
@@ -49,30 +40,17 @@ function About() {
             <strong key={fact}>{TINY_FACTS[fact]}</strong>
           </button>
           <p className="about__bio">
-            Hi, I&apos;m Dyuti! By day I craft React &amp; Angular interfaces at
-            Accenture; by heart I&apos;m an artist who paints, plays piano, and
-            designs a little haute couture on the side. I love turning ideas
-            into soft, playful, pixel-perfect little worlds — and I care about
-            the tiny details, like the wobble of a button or the glow behind a
-            card.        
-            When I&apos;m not coding you&apos;ll catch me lost in a fiction
-            novel, chasing still-life &amp; nature shots with my camera,
-            travelling somewhere new, or shopping for anything pink. ♡
+            Hi, I&apos;m Dyuti Das — born and brought up in Kolkata, now in my
+            twenties and happily married to my favorite human. By day, I&apos;m a
+            Software Engineer at Accenture, crafting pixel-perfect frontends in
+            React and Angular for clients spanning the UK, US, Saudi Arabia, and
+            Singapore, occasionally even teaming up with AI tools like GitHub
+            Copilot and Claude Code. Off the clock, I paint watercolors, design
+            haute couture, play piano, collect buttons, read fiction, travel
+            often, snap photographs, and binge horror movies while hunting for
+            anything pink. Curious, creative, and endlessly excited about
+            everyday life — that&apos;s me, in a nutshell.
           </p>
-          <ul className="about__facts">
-            {FACTS.map(({ icon, label }, i) => (
-              <li
-                key={label}
-                className="cute-chip pop-in"
-                style={{ '--pop': i + 1 }}
-              >
-                <span className="emoji" aria-hidden="true">
-                  {icon}
-                </span>{' '}
-                {label}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
     </main>
