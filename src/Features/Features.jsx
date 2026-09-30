@@ -80,6 +80,134 @@ const FLOATERS = Array.from({ length: 16 }, (_, i) => {
   }
 })
 
+const MUSIC_VIDEO_ID = '9NxQWqVtHRA'
+
+function MusicControl() {
+  const iframeRef = useRef(null)
+  const [volume, setVolume] = useState(75)
+  const [isMuted, setIsMuted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+
+  const sendCommand = (func, args = []) => {
+    if (!iframeRef.current || !iframeRef.current.contentWindow) {
+      return
+    }
+
+    iframeRef.current.contentWindow.postMessage(
+      JSON.stringify({ event: 'command', func, args }),
+      '*',
+    )
+  }
+
+  useEffect(() => {
+    if (!isReady) {
+      return undefined
+    }
+
+    sendCommand('setVolume', [isMuted ? 0 : volume])
+    if (isMuted) {
+      sendCommand('pauseVideo')
+      return undefined
+    }
+
+    sendCommand('playVideo')
+    return undefined
+  }, [isReady, isMuted, volume])
+
+  useEffect(() => {
+    const startMusic = () => {
+      if (!isReady) {
+        return
+      }
+      sendCommand('setVolume', [isMuted ? 0 : volume])
+      if (!isMuted) {
+        sendCommand('playVideo')
+      }
+    }
+
+    const handleInteraction = () => {
+      startMusic()
+      window.removeEventListener('pointerdown', handleInteraction)
+      window.removeEventListener('keydown', handleInteraction)
+    }
+
+    window.addEventListener('pointerdown', handleInteraction, { once: true })
+    window.addEventListener('keydown', handleInteraction, { once: true })
+
+    startMusic()
+
+    return () => {
+      window.removeEventListener('pointerdown', handleInteraction)
+      window.removeEventListener('keydown', handleInteraction)
+    }
+  }, [isReady, isMuted, volume])
+
+  const handleMuteToggle = () => {
+    setIsMuted((current) => !current)
+  }
+
+  return (
+    <div className="features__music">
+      <button
+        type="button"
+        className="features__music-toggle"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-label={isOpen ? 'Close music controls' : 'Open music controls'}
+        aria-expanded={isOpen}
+      >
+        {isMuted ? '🔇' : '♫'}
+      </button>
+
+      {isOpen && (
+        <div className="features__music-panel">
+          <div className="features__music-head">
+            <span>Music</span>
+            <button type="button" onClick={() => setIsOpen(false)} aria-label="Close music panel">
+              ×
+            </button>
+          </div>
+
+          <label className="features__music-label" htmlFor="music-volume">
+            <span>Volume</span>
+            <span>{volume}%</span>
+          </label>
+
+          <input
+            id="music-volume"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value={volume}
+            onChange={(event) => {
+              const nextVolume = Number(event.target.value)
+              setVolume(nextVolume)
+              if (nextVolume > 0) {
+                setIsMuted(false)
+              }
+            }}
+          />
+
+          <button type="button" className="features__music-mute" onClick={handleMuteToggle}>
+            {isMuted ? 'Unmute' : 'Mute'}
+          </button>
+        </div>
+      )}
+
+      <iframe
+        ref={iframeRef}
+        className="features__music-frame"
+        title="Background music"
+        src={`https://www.youtube.com/embed/${MUSIC_VIDEO_ID}?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=${MUSIC_VIDEO_ID}&enablejsapi=1`}
+        allow="autoplay; encrypted-media"
+        allowFullScreen={false}
+        onLoad={() => setIsReady(true)}
+      />
+    </div>
+  )
+}
+
 // Redraws the cursor art through a hue-rotate filter, keeping its shape intact.
 const tint = (src, shift) =>
   new Promise((resolve, reject) => {
@@ -393,6 +521,8 @@ function Features({ children }) {
         </div>
         {children}
       </div>
+
+      <MusicControl />
 
       <section className={`features__inbox${inboxOpen ? ' is-open' : ''}`}>
         {inboxOpen && (
