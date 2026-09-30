@@ -385,6 +385,12 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--hp-4);
+    cursor: var(--cursor-heart);
+    user-select: none;
+
+    span {
+      cursor: inherit;
+    }
   }
 
   &__music-panel input[type='range'] {
