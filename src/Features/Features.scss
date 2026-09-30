@@ -332,9 +332,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
-    border: 2px solid #fff;
+    border: 2px solid var(--surface-border, #fff);
     border-radius: 1.25rem;
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--surface, rgba(255, 255, 255, 0.92));
     box-shadow: 0 0.8rem 1.8rem var(--hp-glow);
     backdrop-filter: blur(4px);
     color: var(--hp-4);
@@ -358,9 +358,9 @@
       width: 1.6rem;
       height: 1.6rem;
       padding: 0;
-      border: 2px solid #fff;
+      border: 2px solid var(--surface-border, #fff);
       border-radius: 50%;
-      background: var(--hp-1);
+      background: var(--hp-2);
       color: var(--hp-4);
       font-size: 1rem;
       line-height: 1;
@@ -370,7 +370,7 @@
       &:hover,
       &:focus-visible {
         transform: scale(1.08);
-        background: var(--hp-2);
+        background: var(--hp-3);
         color: #fff;
       }
     }
@@ -400,9 +400,9 @@
   }
 
   &__music-mute {
-    border: 2px solid #fff;
+    border: 2px solid var(--surface-border, #fff);
     border-radius: 999px;
-    background: var(--hp-1);
+    background: var(--hp-2);
     color: var(--hp-4);
     padding: 0.45rem 0.75rem;
     font-family: 'Baloo 2', system-ui, sans-serif;
@@ -414,7 +414,7 @@
     &:hover,
     &:focus-visible {
       transform: scale(1.05);
-      background: var(--hp-2);
+      background: var(--hp-3);
       color: #fff;
     }
   }
